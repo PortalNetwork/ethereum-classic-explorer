@@ -4,7 +4,7 @@ import { getContent, getAddress } from '../lib/resolverService';
 import { getResolver } from '../lib/registryService';
 import { fromContentHash } from '../helpers/ipfsHelper';
 import { getEntries } from '../lib/registrarService';
-import { getOwner } from '../lib/deedService';
+import { getOwner } from '../lib/registryService';
 import "./App.scss";
 import Loading from './Loading';
 import Warning from './Warning';
@@ -59,7 +59,7 @@ class App extends Component {
     }
 
     handSeachData=()=>{
-        const keydomain = this.state.searchValue.split(".etc");
+        const keydomain = this.state.searchValue.toLowerCase().split(".etc");
         if(keydomain[keydomain.length - 1] !== "") return this.handOpenWarning("ECNS format error");
         const searchResult = this.state.searchValue;
         const domain = keydomain[keydomain.length - 2].split(".");
@@ -69,7 +69,7 @@ class App extends Component {
 
         this.setState({isKeyDown: true, isOpenSearch: false, isAboutOpen: false,});
         getEntries(seachdamain).then(entries => {
-            getOwner(entries.deed).then(owner => {
+            getOwner(this.state.searchValue.toLowerCase()).then(owner => {
                 let t = this.state.idxRes+=1;
                 let eObj = entries;
                 eObj['owner'] = owner;
